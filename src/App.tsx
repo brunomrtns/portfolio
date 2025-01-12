@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import Navbar from "./components/navbar";
-import Chat from "./components/chat";
-import AttendantChats from "./components/attendant-chats";
+// import Chat from "./components/chat";
+// import AttendantChats from "./components/attendant-chats";
 import Notification from "./components/notification";
 import Home from "./pages/home";
 import Projects from "./pages/projects/projects";
@@ -49,7 +49,7 @@ const App: React.FC = () => {
             setSelectedProjectId={setSelectedProjectId}
           />
         )}
-        {currentPage === "attendant-chats" && <AttendantChats />}
+        {/* {currentPage === "attendant-chats" && <AttendantChats />} */}
         {currentPage === "project" && selectedProjectId && (
           <Project
             projectId={selectedProjectId}
@@ -72,7 +72,7 @@ const App: React.FC = () => {
             setSelectedProjectId={setSelectedProjectId}
           />
         )}
-        <ConditionalChat />
+        {/* <ConditionalChat /> */}
         <Notification />
       </GlobalStyles>
     </AuthProvider>
@@ -92,14 +92,14 @@ const HomeWithProjects: React.FC<{
   </>
 );
 
-const ConditionalChat: React.FC = () => {
-  const { user } = useContext(AuthContext);
+// const ConditionalChat: React.FC = () => {
+//   const { user } = useContext(AuthContext);
 
-  if (user?.type === "attendant") {
-    return null;
-  }
+//   if (user?.type === "attendant") {
+//     return null;
+//   }
 
-  return <Chat />;
-};
+//   return <Chat />;
+// };
 
 export default App;
