@@ -2,13 +2,7 @@ import React, { useState, useContext } from "react";
 import { Box, Button, TextField, Modal, Typography } from "@mui/material";
 import axios from "axios";
 import { AuthContext } from "../context/auth-context";
-import io, { Socket } from "socket.io-client";
-import { API_BASE_URL } from '../config';
-
-const socket: Socket = io(`${API_BASE_URL}`, {
-  transports: ["websocket", "polling"],
-  withCredentials: true,
-});
+import { API_BASE_URL } from "../config";
 
 interface SignupFormProps {
   open: boolean;
@@ -33,13 +27,10 @@ const SignupForm: React.FC<SignupFormProps> = ({ open, onClose }) => {
       });
 
       if (response.status === 201) {
-        const authResponse = await axios.post(
-          `${API_BASE_URL}/authenticate`,
-          {
-            emailOrUsername: email,
-            password,
-          },
-        );
+        const authResponse = await axios.post(`${API_BASE_URL}/authenticate`, {
+          emailOrUsername: email,
+          password,
+        });
         const { token, user } = authResponse.data;
         setToken(token);
         setUser(user);
@@ -47,11 +38,10 @@ const SignupForm: React.FC<SignupFormProps> = ({ open, onClose }) => {
         const chatResponse = await axios.post(
           `${API_BASE_URL}/chat/create`,
           { name: email, attendantId: 5, clientId: user.id },
-          { headers: { Authorization: `Bearer ${token}` } },
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         const chatId = chatResponse.data.chat.id;
         setChatId(chatId);
-        socket.emit("joinChat", chatId);
       }
       onClose();
     } catch (error) {

@@ -2,13 +2,7 @@ import React, { useState, useContext } from "react";
 import { Box, Button, TextField, Modal, Typography } from "@mui/material";
 import axios from "axios";
 import { AuthContext } from "../context/auth-context";
-import io, { Socket } from "socket.io-client";
-import { API_BASE_URL } from '../config';
-
-const socket: Socket = io(`${API_BASE_URL}`, {
-  transports: ["websocket", "polling"],
-  withCredentials: true,
-});
+import { API_BASE_URL } from "../config";
 
 interface AuthModalProps {
   open: boolean;
@@ -26,13 +20,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
   const handleAuth = async () => {
     try {
       if (isLogin) {
-        const response = await axios.post(
-          `${API_BASE_URL}/authenticate`,
-          {
-            emailOrUsername: email,
-            password,
-          },
-        );
+        const response = await axios.post(`${API_BASE_URL}/authenticate`, {
+          emailOrUsername: email,
+          password,
+        });
         const { token, user } = response.data;
         setToken(token);
         setUser(user);
@@ -40,7 +31,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
         if (user?.type === "client") {
           const chatResponse = await axios.get(
             `${API_BASE_URL}/chat/${user.id}`,
-            { headers: { Authorization: `Bearer ${token}` } },
+            { headers: { Authorization: `Bearer ${token}` } }
           );
           let chatId;
           if (chatResponse.status === 200 && chatResponse.data.chat) {
@@ -49,12 +40,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
             const createChatResponse = await axios.post(
               `${API_BASE_URL}/chat/create`,
               { name: email, attendantId: 5, clientId: user.id },
-              { headers: { Authorization: `Bearer ${token}` } },
+              { headers: { Authorization: `Bearer ${token}` } }
             );
             chatId = createChatResponse.data.chat.id;
           }
           setChatId(chatId);
-          socket.emit("joinChat", chatId);
         }
       } else {
         const createResponse = await axios.post(
@@ -65,7 +55,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
             email,
             password,
             type: "client",
-          },
+          }
         );
 
         if (createResponse.status === 201) {
@@ -74,7 +64,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
             {
               emailOrUsername: email,
               password,
-            },
+            }
           );
           const { token, user } = authResponse.data;
           setToken(token);
@@ -83,11 +73,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
           const chatResponse = await axios.post(
             `${API_BASE_URL}/chat/create`,
             { name: email, attendantId: 1, clientId: user.id },
-            { headers: { Authorization: `Bearer ${token}` } },
+            { headers: { Authorization: `Bearer ${token}` } }
           );
           const chatId = chatResponse.data.chat.id;
           setChatId(chatId);
-          socket.emit("joinChat", chatId);
         }
       }
       onClose();
