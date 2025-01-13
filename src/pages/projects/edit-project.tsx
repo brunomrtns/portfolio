@@ -152,7 +152,7 @@ const EditProject: React.FC<{ projectId: string; onBack: () => void }> = ({
       console.error("Error updating project:", error);
     }
   };
-
+  console.log("renderizando pagina de edicao");
   return (
     <Container>
       <Box mt={5} textAlign="center">

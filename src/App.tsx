@@ -35,7 +35,7 @@ const App: React.FC = () => {
       dispatch(setUser(JSON.parse(user)));
     }
   }, [dispatch]);
-
+  console.log("currentPage", currentPage);
   return (
     <AuthProvider>
       <GlobalStyles>
