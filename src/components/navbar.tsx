@@ -11,10 +11,17 @@ import {
   ListItemText,
   Collapse,
   Box,
+  ListItemIcon,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import HomeIcon from "@mui/icons-material/Home";
+import InfoIcon from "@mui/icons-material/Info";
+import BuildIcon from "@mui/icons-material/Build";
+import WorkIcon from "@mui/icons-material/Work";
+import ContactMailIcon from "@mui/icons-material/ContactMail";
+import CategoryIcon from "@mui/icons-material/Category";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@mui/material/styles";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
@@ -25,6 +32,7 @@ import { AuthContext } from "../context/auth-context";
 import AuthModal from "./auth-modal";
 import axios from "axios";
 import { API_BASE_URL } from "../config";
+import { appBarStyle } from "./styles";
 
 interface NavbarProps {
   setCurrentPage: (page: string) => void;
@@ -36,19 +44,12 @@ interface Category {
   title: string;
 }
 
-interface MenuItemProps {
-  text: string;
-  onClick?: () => void;
-  keepOpen?: boolean; // Indica se o menu principal deve permanecer aberto
-  submenu?: React.ReactNode; // Para submenus, passamos os filhos
-}
-
 const Navbar: React.FC<NavbarProps> = ({
   setCurrentPage,
   setSelectedCategory,
 }) => {
   const theme = useTheme();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { toggleTheme, themeMode } = useThemeContext();
   const { user, setUser, setToken, setChatId } = useContext(AuthContext);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -101,28 +102,40 @@ const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar
+        position="static"
+        css={appBarStyle(themeMode, theme)} // Chama a função appBarStyle com o tema atual
+      >
         <Toolbar>
           <IconButton
             edge="start"
             color="inherit"
-            aria-label="menu"
+            aria-label={t("navbar.menu")}
             onClick={toggleDrawer(true)}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6">Bruno Martins</Typography>
+          <Typography variant="h6">{t("navbar.title")}</Typography>
           <Box ml="auto">
-            <IconButton color="inherit" onClick={() => changeLanguage("en")}>
+            <IconButton
+              color="inherit"
+              aria-label={t("navbar.language.en")}
+              onClick={() => changeLanguage("en")}
+            >
               <FaFlagUsa />
             </IconButton>
-            <IconButton color="inherit" onClick={() => changeLanguage("pt")}>
+            <IconButton
+              color="inherit"
+              aria-label={t("navbar.language.pt")}
+              onClick={() => changeLanguage("pt")}
+            >
               <GiBrazilFlag />
             </IconButton>
             <IconButton
               color="inherit"
               onClick={toggleTheme}
               style={iconButtonStyle}
+              aria-label={t("navbar.toggleTheme")}
             >
               {themeMode === "light" ? <MdLightMode /> : <MdDarkMode />}
             </IconButton>
@@ -133,14 +146,16 @@ const Navbar: React.FC<NavbarProps> = ({
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
         <Box role="presentation" sx={{ width: 250 }}>
           <List>
-            {/* Itens de Menu */}
             <ListItem
               button
               onClick={() =>
                 handleItemClick(false, () => setCurrentPage("home"))
               }
             >
-              <ListItemText primary="Home" />
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("navbar.home")} />
             </ListItem>
             <ListItem
               button
@@ -148,7 +163,10 @@ const Navbar: React.FC<NavbarProps> = ({
                 handleItemClick(false, () => setCurrentPage("services"))
               }
             >
-              <ListItemText primary="Services" />
+              <ListItemIcon>
+                <BuildIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("navbar.services")} />
             </ListItem>
             <ListItem
               button
@@ -156,7 +174,10 @@ const Navbar: React.FC<NavbarProps> = ({
                 handleItemClick(false, () => setCurrentPage("about"))
               }
             >
-              <ListItemText primary="About" />
+              <ListItemIcon>
+                <InfoIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("navbar.about")} />
             </ListItem>
             <ListItem
               button
@@ -164,7 +185,10 @@ const Navbar: React.FC<NavbarProps> = ({
                 handleItemClick(false, () => setCurrentPage("skills"))
               }
             >
-              <ListItemText primary="Skills" />
+              <ListItemIcon>
+                <WorkIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("navbar.skills")} />
             </ListItem>
             <ListItem
               button
@@ -172,7 +196,10 @@ const Navbar: React.FC<NavbarProps> = ({
                 handleItemClick(false, () => setCurrentPage("portfolio"))
               }
             >
-              <ListItemText primary="Portfolio" />
+              <ListItemIcon>
+                <WorkIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("navbar.portfolio")} />
             </ListItem>
             <ListItem
               button
@@ -180,7 +207,10 @@ const Navbar: React.FC<NavbarProps> = ({
                 handleItemClick(false, () => setCurrentPage("contact"))
               }
             >
-              <ListItemText primary="Contact" />
+              <ListItemIcon>
+                <ContactMailIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("navbar.contact")} />
             </ListItem>
 
             {/* Submenu de Categorias */}
@@ -188,7 +218,10 @@ const Navbar: React.FC<NavbarProps> = ({
               button
               onClick={() => handleItemClick(true, toggleCategories)}
             >
-              <ListItemText primary="Categories" />
+              <ListItemIcon>
+                <CategoryIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("navbar.categories")} />
               {categoriesOpen ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse in={categoriesOpen} timeout="auto" unmountOnExit>
@@ -211,31 +244,6 @@ const Navbar: React.FC<NavbarProps> = ({
               </List>
             </Collapse>
 
-            {/* Itens para atendentes */}
-            {user?.type === "attendant" && (
-              <>
-                <ListItem
-                  button
-                  onClick={() =>
-                    handleItemClick(false, () =>
-                      setCurrentPage("attendant-chats")
-                    )
-                  }
-                >
-                  <ListItemText primary="Chats" />
-                </ListItem>
-                <ListItem
-                  button
-                  onClick={() =>
-                    handleItemClick(false, () => setCurrentPage("add-project"))
-                  }
-                >
-                  <ListItemText primary="Acrescentar Projeto" />
-                </ListItem>
-              </>
-            )}
-
-            {/* Login/Logout */}
             <ListItem
               button
               onClick={() =>
@@ -245,7 +253,9 @@ const Navbar: React.FC<NavbarProps> = ({
                 )
               }
             >
-              <ListItemText primary={user ? "Logout" : "Login"} />
+              <ListItemText
+                primary={user ? t("navbar.logout") : t("navbar.login")}
+              />
             </ListItem>
           </List>
         </Box>
