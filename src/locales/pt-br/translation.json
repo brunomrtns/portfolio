@@ -6,5 +6,23 @@
   "services": "Serviços",
   "skill_set": "Conjunto de Habilidades",
   "projects": "Projetos",
-  "back_to_projects": "Voltar aos Projetos"
+  "back_to_projects": "Voltar aos Projetos",
+  "navbar": {
+    "menu": "Menu",
+    "title": "Bruno Martins",
+    "language": {
+      "en": "Inglês",
+      "pt": "Português"
+    },
+    "toggleTheme": "Alternar tema",
+    "home": "Início",
+    "services": "Serviços",
+    "about": "Sobre",
+    "skills": "Habilidades",
+    "portfolio": "Portfólio",
+    "contact": "Contato",
+    "categories": "Categorias",
+    "login": "Entrar",
+    "logout": "Sair"
+  }
 }
