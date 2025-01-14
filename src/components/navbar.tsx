@@ -245,20 +245,12 @@ const Navbar: React.FC<NavbarProps> = ({
               </List>
             </Collapse>
             {user?.type === "attendant" && (
-              <>
-                <Button
-                  color="inherit"
-                  onClick={() => setCurrentPage("attendant-chats")}
-                >
-                  Chats
-                </Button>
-                <Button
-                  color="inherit"
-                  onClick={() => setCurrentPage("add-project")}
-                >
-                  Acrescentar Projeto
-                </Button>
-              </>
+              <Button
+                color="inherit"
+                onClick={() => setCurrentPage("add-project")}
+              >
+                {t("navbar.addProjects")}
+              </Button>
             )}
             <ListItem
               button

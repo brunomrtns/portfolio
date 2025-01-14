@@ -23,6 +23,7 @@
     "contact": "Contact",
     "categories": "Categories",
     "login": "Login",
-    "logout": "Logout"
+    "logout": "Logout",
+    "addProjects": "Add project"
   }
 }
