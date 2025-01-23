@@ -85,7 +85,7 @@ const App: React.FC = () => {
             }}
           >
             <Typography variant="body2" color="text.secondary">
-              &copy; {new Date().getFullYear()} Minha Empresa
+              &copy; {new Date().getFullYear()} Bruno Martins
             </Typography>
           </Box>
         </Box>
