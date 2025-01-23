@@ -1,7 +1,7 @@
 {
-  "hello": "Hello, I'm",
-  "developer": "a Full stack Developer!",
-  "description": "And this site is still under development.",
+  "hello": "This site",
+  "developer": "is",
+  "description": "still under development.",
   "create_journey": "Create Journey",
   "services": "Services",
   "skill_set": "Skill-Set",

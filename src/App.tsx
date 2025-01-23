@@ -1,7 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./components/navbar";
-// import Chat from "./components/chat";
-// import AttendantChats from "./components/attendant-chats";
 import Notification from "./components/notification";
 import Home from "./pages/home";
 import Projects from "./pages/projects/projects";
@@ -10,11 +8,11 @@ import AddProject from "./pages/projects/add-project";
 import EditProject from "./pages/projects/edit-project";
 import CategoryArticles from "./pages/projects/category-articles";
 import GlobalStyles from "./global-styles";
-import "react-quill/dist/quill.snow.css";
-import { AuthProvider, AuthContext } from "./context/auth-context";
+import { AuthProvider } from "./context/auth-context";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./redux";
 import { setToken, setUser } from "./redux/slices/auth-slice";
+import { Container, Box, Typography } from "@mui/material";
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<string>("home");
@@ -39,40 +37,58 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <GlobalStyles>
-        <Navbar
-          setCurrentPage={setCurrentPage}
-          setSelectedCategory={setSelectedCategoryId}
-        />
-        {currentPage === "home" && (
-          <HomeWithProjects
+        <Box
+          sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+        >
+          {/* Navbar fixa no topo */}
+          <Navbar
             setCurrentPage={setCurrentPage}
-            setSelectedProjectId={setSelectedProjectId}
+            setSelectedCategory={setSelectedCategoryId}
           />
-        )}
-        {/* {currentPage === "attendant-chats" && <AttendantChats />} */}
-        {currentPage === "project" && selectedProjectId && (
-          <Project
-            projectId={selectedProjectId}
-            onBack={() => setCurrentPage("home")}
-          />
-        )}
-        {currentPage === "edit-project" &&
-          selectedProjectId &&
-          user?.type === "attendant" && (
-            <EditProject
-              projectId={selectedProjectId}
-              onBack={() => setCurrentPage("home")}
-            />
-          )}
-        {currentPage === "add-project" && <AddProject />}
-        {currentPage === "category-articles" && selectedCategoryId && (
-          <CategoryArticles
-            categoryId={selectedCategoryId}
-            setCurrentPage={setCurrentPage}
-            setSelectedProjectId={setSelectedProjectId}
-          />
-        )}
-        {/* <ConditionalChat /> */}
+          <Container maxWidth="lg" sx={{ flex: 1, py: 4 }}>
+            {currentPage === "home" && (
+              <HomeWithProjects
+                setCurrentPage={setCurrentPage}
+                setSelectedProjectId={setSelectedProjectId}
+              />
+            )}
+            {currentPage === "project" && selectedProjectId && (
+              <Project
+                projectId={selectedProjectId}
+                onBack={() => setCurrentPage("home")}
+              />
+            )}
+            {currentPage === "edit-project" &&
+              selectedProjectId &&
+              user?.type === "attendant" && (
+                <EditProject
+                  projectId={selectedProjectId}
+                  onBack={() => setCurrentPage("home")}
+                />
+              )}
+            {currentPage === "add-project" && <AddProject />}
+            {currentPage === "category-articles" && selectedCategoryId && (
+              <CategoryArticles
+                categoryId={selectedCategoryId}
+                setCurrentPage={setCurrentPage}
+                setSelectedProjectId={setSelectedProjectId}
+              />
+            )}
+          </Container>
+          {/* Rodapé opcional */}
+          <Box
+            sx={{
+              py: 2,
+              backgroundColor: "background.paper",
+              textAlign: "center",
+              mt: "auto",
+            }}
+          >
+            <Typography variant="body2" color="text.secondary">
+              &copy; {new Date().getFullYear()} Minha Empresa
+            </Typography>
+          </Box>
+        </Box>
         <Notification />
       </GlobalStyles>
     </AuthProvider>
@@ -91,15 +107,5 @@ const HomeWithProjects: React.FC<{
     />
   </>
 );
-
-// const ConditionalChat: React.FC = () => {
-//   const { user } = useContext(AuthContext);
-
-//   if (user?.type === "attendant") {
-//     return null;
-//   }
-
-//   return <Chat />;
-// };
 
 export default App;

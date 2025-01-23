@@ -75,7 +75,6 @@ const Projects: React.FC<ProjectsProps> = ({
 
   const handleEditClick = (projectId: string) => {
     setSelectedProjectId(projectId);
-    console.log('setCurrentPage("edit-project");');
     setCurrentPage("edit-project");
   };
 
@@ -120,21 +119,27 @@ const Projects: React.FC<ProjectsProps> = ({
         <Typography variant="h3" color="text.primary" gutterBottom>
           {t("skill_set")}
         </Typography>
-        <Grid container spacing={2} justifyContent="center">
+        <Grid container spacing={4} justifyContent="center">
           {projects.length === 0 ? (
             <Typography variant="h5" color="text.secondary">
               {t("no_projects_found")}
             </Typography>
           ) : (
             projects.map((project) => (
-              <Grid item key={project.id} xs={12} sm={6} md={4}>
+              <Grid item key={project.id} xs={12} sm={6} md={4} lg={3}>
                 <Card
-                  sx={{ maxWidth: 345, cursor: "pointer" }}
-                  onClick={() => handleProjectClick(project.id.toString())} // Mova o onClick para o Card
+                  sx={{
+                    maxWidth: 345,
+                    cursor: "pointer",
+                    boxShadow: 3,
+                    borderRadius: 2,
+                    "&:hover": { boxShadow: 6 },
+                  }}
+                  onClick={() => handleProjectClick(project.id.toString())}
                 >
                   <CardMedia
                     component="img"
-                    height="140"
+                    height="180"
                     image={project.coverImage}
                     alt={project.title}
                   />
@@ -152,12 +157,17 @@ const Projects: React.FC<ProjectsProps> = ({
                     </Typography>
                   </CardContent>
                   {user?.type === "attendant" && (
-                    <Box display="flex" justifyContent="space-between" p={2}>
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      px={2}
+                      py={1}
+                    >
                       <Button
                         variant="outlined"
                         color="primary"
                         onClick={(e) => {
-                          e.stopPropagation(); // Prevenir que o clique no botão propague para o Card
+                          e.stopPropagation(); // Evitar propagação para o Card
                           handleEditClick(project.id.toString());
                         }}
                       >
@@ -167,7 +177,7 @@ const Projects: React.FC<ProjectsProps> = ({
                         variant="outlined"
                         color="secondary"
                         onClick={(e) => {
-                          e.stopPropagation(); // Prevenir que o clique no botão propague para o Card
+                          e.stopPropagation(); // Evitar propagação para o Card
                           handleDeleteClick(project.id.toString());
                         }}
                       >
@@ -181,6 +191,8 @@ const Projects: React.FC<ProjectsProps> = ({
           )}
         </Grid>
       </Box>
+
+      {/* Diálogo de confirmação para exclusão */}
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
